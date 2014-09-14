@@ -1,2 +1,29 @@
-# Folders
-node_modules
+# Ignore packaging/caches
+/node_modules
+/build
+/tmp
+
+# Numerous always-ignore extensions
+*.diff
+*.patch
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.vi
+*~
+*.sass-cache
+
+# OS or Editor folders/files
+.DS_Store
+.cache
+.project
+.settings
+*.idea
+*.sln
+*.sublime-workspace
+nbproject
+Thumbs.db
+npm-debug.log
