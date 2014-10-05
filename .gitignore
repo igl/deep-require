@@ -1,29 +1,25 @@
-# Ignore packaging/caches
-/node_modules
-/build
-/tmp
+node_modules/
 
-# Numerous always-ignore extensions
-*.diff
-*.patch
-*.err
-*.orig
+.DS_Store*
+.idea
+*.db
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.iml
+*.hidden
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pid
 *.log
-*.rej
-*.swo
-*.swp
-*.vi
-*~
-*.sass-cache
-
-# OS or Editor folders/files
-.DS_Store
-.cache
-.project
-.settings
-*.idea
-*.sln
-*.sublime-workspace
-nbproject
-Thumbs.db
-npm-debug.log
+*.sql
+*.sqlite
