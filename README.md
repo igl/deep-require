@@ -10,7 +10,8 @@ Usage:
 
     var getModels = require('deep-require')({
         camelize:true,
-        filter: function (name) { return /model\.js$/.test(name); }
+        filter: /model\.js$/,
+        map: function (name) { return name[0].toUpperCase() + name.slice(1); }
     });
 
     getModels('./models')
