@@ -43,7 +43,7 @@ suite 'deep-require' !->
         result = deepRequire '../test-fixtures' { filter: /^index.?/i }
         strictEqual 1, (Object.keys result .length)
 
-    test 'map files and folders' !->
+    test 'map files' !->
         result = deepRequire '../test-fixtures' { map: -> "XY#it" }
         deepEqual result, {
             XYindex: 'index.ls'
@@ -51,13 +51,13 @@ suite 'deep-require' !->
             XYsomeFile: 'some-file.js'
         }
 
-    test 'deep-map files and folders' !->
+    test 'deep-map files' !->
         result = deepRequire '../test-fixtures' { +recursive, map: -> "XY#it" }
         deepEqual result, {
             XYindex: 'index.ls'
             XYotherFile: 'other-file.ls'
             XYsomeFile: 'some-file.js'
-            XYsubDir: {
+            subDir: {
                 XYdeepFile: 'deep-file.ls'
                 XYevenDeeper: 'even-deeper.js'
             }

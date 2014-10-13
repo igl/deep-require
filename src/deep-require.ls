@@ -49,7 +49,6 @@ deepRequire = module.exports = (cwd, opts, root) -->
 
             name := name.replace ext.0, ''
             name := (camelize name) if options.camelize
-            name := (options.map name) if options.map
 
             if stat.isDirectory!
             and options.recursive
@@ -58,6 +57,7 @@ deepRequire = module.exports = (cwd, opts, root) -->
             else if stat.isFile!
             and (options.extensions.indexOf ext.1) isnt -1
                 return unless (filter options.filter, name)
+                name := (options.map name) if options.map
                 modules[name] = require absPath
         modules
 
