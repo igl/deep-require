@@ -26,7 +26,7 @@ filter = function(method, name){
   }
 };
 deepRequire = module.exports = curry$(function(cwd, opts, root){
-  var options, k, ref$, v, parseDir;
+  var options, k, ref$, v, NODE_PATH, parseDir;
   options = {};
   for (k in ref$ = defaults) {
     v = ref$[k];
@@ -36,9 +36,13 @@ deepRequire = module.exports = curry$(function(cwd, opts, root){
     v = opts[k];
     options[k] = v;
   }
+  NODE_PATH = process.env.NODE_PATH;
   parseDir = function(dir){
-    var modules, absDir;
+    var modules, cwd, absDir;
     modules = {};
+    if (dir.slice(0, 2) !== './' && fs.existsSync(NODE_PATH)) {
+      cwd = NODE_PATH;
+    }
     absDir = path.join(cwd, dir);
     fs.readdirSync(absDir).forEach(function(name){
       var ext, relPath, absPath, stat;
