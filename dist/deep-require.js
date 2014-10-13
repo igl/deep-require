@@ -54,14 +54,14 @@ deepRequire = module.exports = curry$(function(cwd, opts, root){
       if (options.camelize) {
         name = camelize(name);
       }
-      if (options.map) {
-        name = options.map(name);
-      }
       if (stat.isDirectory() && options.recursive) {
         return modules[name] = parseDir(relPath);
       } else if (stat.isFile() && options.extensions.indexOf(ext[1]) !== -1) {
         if (!filter(options.filter, name)) {
           return;
+        }
+        if (options.map) {
+          name = options.map(name);
         }
         return modules[name] = require(absPath);
       }
