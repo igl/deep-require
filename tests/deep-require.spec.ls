@@ -10,27 +10,28 @@ suite 'deep-require' !->
     test 'camelizes' !->
         result = deepRequire '../test-fixtures'
         deepEqual result, {
-            index: 'index'
-            otherFile: 'other-file'
-            someFile: 'some-file'
+            index: 'index.ls'
+            otherFile: 'other-file.ls'
+            someFile: 'some-file.js'
         }
 
     test 'do not camelize' !->
         result = deepRequire '../test-fixtures' { -camelize }
         deepEqual result, {
-            'index': 'index'
-            'other-file': 'other-file'
-            'some-file': 'some-file'
+            'index': 'index.ls'
+            'other-file': 'other-file.ls'
+            'some-file': 'some-file.js'
         }
 
     test 'require with sub-directories' !->
         result = deepRequire '../test-fixtures' { +recursive }
         deepEqual result, {
-            index: 'index'
-            otherFile: 'other-file'
-            someFile: 'some-file'
+            index: 'index.ls'
+            otherFile: 'other-file.ls'
+            someFile: 'some-file.js'
             subDir: {
-                deepFile: 'deep-file'
+                deepFile: 'deep-file.ls'
+                evenDeeper: 'even-deeper.js'
             }
         }
 
@@ -45,29 +46,26 @@ suite 'deep-require' !->
     test 'map files and folders' !->
         result = deepRequire '../test-fixtures' { map: -> "XY#it" }
         deepEqual result, {
-            XYindex: 'index'
-            XYotherFile: 'other-file'
-            XYsomeFile: 'some-file'
+            XYindex: 'index.ls'
+            XYotherFile: 'other-file.ls'
+            XYsomeFile: 'some-file.js'
         }
 
     test 'deep-map files and folders' !->
         result = deepRequire '../test-fixtures' { +recursive, map: -> "XY#it" }
         deepEqual result, {
-            XYindex: 'index'
-            XYotherFile: 'other-file'
-            XYsomeFile: 'some-file'
+            XYindex: 'index.ls'
+            XYotherFile: 'other-file.ls'
+            XYsomeFile: 'some-file.js'
             XYsubDir: {
-                XYdeepFile: 'deep-file'
+                XYdeepFile: 'deep-file.ls'
+                XYevenDeeper: 'even-deeper.js'
             }
         }
 
     test 'load files from NODE_PATH' !->
-        result = deepRequire 'test-fixtures'
+        result = deepRequire 'sub-dir'
         deepEqual result, {
-            XYindex: 'index'
-            XYotherFile: 'other-file'
-            XYsomeFile: 'some-file'
-            XYsubDir: {
-                XYdeepFile: 'deep-file'
-            }
+            deepFile: 'deep-file.ls'
+            evenDeeper: 'even-deeper.js'
         }

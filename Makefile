@@ -18,7 +18,7 @@ install:
 	@npm install .
 
 test: build
-	@$(MOCHA) tests -u tdd -R spec -t 5000 --compilers ls:$(LS) -r "./test-runner.js" -c -S -b --recursive --check-leaks --inline-diffs
+	@NODE_PATH="$(PWD)/test-fixtures" $(MOCHA) tests -u tdd -R spec -t 5000 --compilers ls:$(LS) -r "./test-runner.js" -c -S -b --recursive --check-leaks --inline-diffs
 
 clean:
 	@rm -rf dist

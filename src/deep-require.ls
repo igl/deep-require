@@ -31,9 +31,13 @@ deepRequire = module.exports = (cwd, opts, root) -->
     for k, v of defaults => options[k] = v
     for k, v of opts     => options[k] = v
 
+    NODE_PATH = process.env.NODE_PATH
+
     # parseDir :: string -> object
     parseDir = (dir) ->
         modules = {}
+        if (dir.slice 0 2) isnt './' and fs.existsSync NODE_PATH
+            cwd = NODE_PATH
 
         absDir = path.join cwd, dir
 
