@@ -3,9 +3,25 @@
 suite 'deep-require' !->
     deepRequire = require '../'
 
-    test 'default options require without error' !->
+    test 'works without options' !->
         result = deepRequire '../test-fixtures'
         strictEqual 3, (Object.keys result .length)
+
+    test 'works with empty options' !->
+        result = deepRequire {}, '../test-fixtures'
+        strictEqual 3, (Object.keys result .length)
+
+    test 'works with arguments reversed' !->
+        result = deepRequire '../test-fixtures', {}
+        strictEqual 3, (Object.keys result .length)
+
+    test 'curries' !->
+        strictEqual do
+            typeof (partial = deepRequire {})
+            'function'
+        strictEqual do
+            typeof (partial '../test-fixtures')
+            'object'
 
     test 'camelizes' !->
         result = deepRequire '../test-fixtures'
@@ -40,8 +56,16 @@ suite 'deep-require' !->
         strictEqual 2, (Object.keys result .length)
 
     test 'filters filenames' !->
-        result = deepRequire '../test-fixtures' { filter: /^index.?/i }
-        strictEqual 1, (Object.keys result .length)
+        deepEqual do
+            deepRequire '../test-fixtures' { filter: /^index.?/i }
+            { index: 'index.ls' }
+
+        deepEqual do
+            deepRequire '../test-fixtures' { filter: /file\.(js|ls)$/i }
+            {
+                otherFile: 'other-file.ls'
+                someFile: 'some-file.js'
+            }
 
     test 'map files' !->
         result = deepRequire '../test-fixtures' { map: -> "XY#it" }
