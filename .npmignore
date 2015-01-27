@@ -1,0 +1,8 @@
+coverage/
+src/
+test/
+test-fixtures/
+*.ls
+**/*.ls
+.npmignore
+Makefile
