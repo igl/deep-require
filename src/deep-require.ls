@@ -33,6 +33,7 @@ filter = (method, name) ->
     switch (Object.prototype.toString.call method .slice 8, -1)
     | 'Function' then method name
     | 'RegExp'   then method.test name
+    | 'String'   then //#method//.test name
     | _          then true
 
 # deepRequire :: object -> string -> object
