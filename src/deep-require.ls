@@ -64,7 +64,10 @@ deepRequire = module.exports = (cwd, opts, str) -->
 
             if stat.isDirectory!
             and options.recursive
-                modules[name] = parseDir relPath
+                sub-dir = parseDir relPath
+                # only add sub directory if it is not empty
+                unless Object.keys sub-dir .length is 0
+                    modules[name] = sub-dir
 
             else if stat.isFile!
             and (options.extensions.indexOf ext.1) isnt -1
