@@ -19,9 +19,8 @@ defaults = {
 
 # mixin :: object -> object -> object
 mixin = (dest, ...sources) ->
-    for src in sources
-        for key, value of src
-            dest[key] = value
+    for src in sources => for key, value of src
+        dest[key] = value
     dest
 
 # camelize :: string -> string
@@ -48,30 +47,37 @@ deepRequire = module.exports = (cwd, opts, str) -->
 
     # parse input and return modules
     # parseDir :: string -> object
-    str |> function parseDir (dir)
-        modules = {}
+    str |> function walk directory
+        result = {}
 
-        absDir = path.join cwd, dir
+        fs.readdirSync (path.join cwd, directory) .forEach (itemName) ->
+            fileExt     = itemName.match /\.(.*)$/i or []
+            filePath    = path.join directory, itemName
+            fileAbsPath = path.join cwd, filePath
+            fileStats   = fs.statSync fileAbsPath
+            fileNameExp = itemName.replace fileExt.0, ''
 
-        fs.readdirSync absDir .forEach (file) ->
-            ext     = file.match /\.(.*)$/i or []
-            relPath = path.join dir, file
-            absPath = path.join cwd, relPath
-            stat    = fs.statSync absPath
-            name    = file.replace ext.0, ''
+            if options.camelize
+                fileNameExp := (camelize fileNameExp)
 
-            name   := (camelize name) if options.camelize
-
-            if stat.isDirectory!
+            if fileStats.isDirectory!
             and options.recursive
-                sub-dir = parseDir relPath
-                # only add sub directory if it is not empty
-                unless Object.keys sub-dir .length is 0
-                    modules[name] = sub-dir
+                subDir = walk filePath
 
-            else if stat.isFile!
-            and (options.extensions.indexOf ext.1) isnt -1
-                return unless filter options.filter, file
-                name := (options.map name) if options.map
-                modules[name] = require absPath
-        modules
+                # only add sub directory if it is not empty
+                if Object.keys subDir .length > 0
+
+                    # flatten results?
+                    if options.recursive is 'flat'
+                        mixin result, subDir
+                    else
+                        result[fileNameExp] = subDir
+
+            else if fileStats.isFile!
+            and (options.extensions.indexOf fileExt.1) isnt -1
+                unless filter options.filter, itemName
+                    return
+
+                fileNameExp := (options.map fileNameExp) if options.map
+                result[fileNameExp] = require fileAbsPath
+        result

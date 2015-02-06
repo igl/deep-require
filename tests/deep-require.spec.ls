@@ -93,14 +93,6 @@ test 'deep-map files' !->
             }
         }
 
-test 'list files using NODE_PATH' !->
-    deepEqual do
-        deepRequire 'sub-dir'
-        {
-            deepFile: 'deep-file.ls'
-            evenDeeper: 'even-deeper.js'
-        }
-
 test 'does not list empty directories' !->
     deepEqual do
         deepRequire { +recursive } '.'
@@ -112,4 +104,23 @@ test 'does not list empty directories' !->
                 deepFile: 'deep-file.ls'
                 evenDeeper: 'even-deeper.js'
             }
+        }
+
+test 'flatten sub directories' !->
+    deepEqual do
+        deepRequire { recursive: 'flat' } '.'
+        {
+            index: 'index.ls'
+            otherFile: 'other-file.ls'
+            someFile: 'some-file.js'
+            deepFile: 'deep-file.ls'
+            evenDeeper: 'even-deeper.js'
+        }
+
+test 'list files using NODE_PATH' !->
+    deepEqual do
+        deepRequire 'sub-dir'
+        {
+            deepFile: 'deep-file.ls'
+            evenDeeper: 'even-deeper.js'
         }
