@@ -5,6 +5,10 @@
   "license": "MIT",
   "author": "Richard Keil",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/igl/deep-require.git"
+  },
   "directories": {
     "dist": "./dist"
   },
