@@ -17,6 +17,8 @@ defaults = {
     map: null
 }
 
+isFunction = -> typeof it is 'function'
+
 # mixin :: object -> object -> object
 mixin = (dest, ...sources) ->
     for src in sources => for key, value of src
@@ -54,6 +56,7 @@ deepRequire = module.exports = (cwd, opts, str) -->
             fileExt     = itemName.match /\.(.*)$/i or []
             filePath    = path.join directory, itemName
             fileAbsPath = path.join cwd, filePath
+            fileParent  = path.basename directory
             fileStats   = fs.statSync fileAbsPath
             fileNameExp = itemName.replace fileExt.0, ''
 
@@ -78,6 +81,8 @@ deepRequire = module.exports = (cwd, opts, str) -->
                 unless filter options.filter, itemName
                     return
 
-                fileNameExp := (options.map fileNameExp) if options.map
+                if typeof options.map is 'function'
+                    fileNameExp := (options.map fileNameExp, directory)
+
                 result[fileNameExp] = require fileAbsPath
         result
