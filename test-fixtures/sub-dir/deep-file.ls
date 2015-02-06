@@ -1,1 +1,1 @@
-module.exports = 'deep-file'
+module.exports = 'deep-file.ls'

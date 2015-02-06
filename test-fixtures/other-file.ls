@@ -1,1 +1,1 @@
-module.exports = 'other-file'
+module.exports = 'other-file.ls'
