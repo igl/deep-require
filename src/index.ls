@@ -4,7 +4,7 @@
 delete require.cache[__filename]
 
 require! {
-    path
+    'path'
     './deep-require'
 }
 

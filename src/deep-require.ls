@@ -1,20 +1,19 @@
 'use strict'
 
 require! {
-    fs
-    path
+    'fs'
+    'path'
 }
 
-# const
-NODE_PATH = process.env.NODE_PATH
+const NODE_PATH = process.env.NODE_PATH
 
-# default options
-defaults = {
+const DEFAULTS = {
     extensions: <[ js json ls coffee ]>
     recursive: false
     camelize: true
     filter: null
     map: null
+    parse: null
 }
 
 isFunction = -> typeof it is 'function'
@@ -38,30 +37,30 @@ filter = (method, name) ->
     | _          then true
 
 # deepRequire :: object -> string -> object
-deepRequire = module.exports = (cwd, opts, str) -->
+module.exports = :deepRequire (cwd, opts, str) -->
 
     # match NODE_PATH
     if (not /^[\.]{1,2}\//.test str) and (fs.existsSync NODE_PATH)
         cwd := NODE_PATH
 
     # mix defaults with user-options
-    options = mixin {}, defaults, opts
+    options = mixin {}, DEFAULTS, opts
 
     # parse input and return modules
     # parseDir :: string -> object
     str |> function walk directory
         result = {}
 
-        fs.readdirSync (path.join cwd, directory) .forEach (itemName) ->
+        fs.readdirSync (path.join cwd, directory) .forEach (itemName) !->
             fileExt     = itemName.match /\.(.*)$/i or []
             filePath    = path.join directory, itemName
             fileAbsPath = path.join cwd, filePath
             fileParent  = path.basename directory
             fileStats   = fs.statSync fileAbsPath
-            fileNameExp = itemName.replace fileExt.0, ''
+            exportName  = itemName.replace fileExt.0, ''
 
             if options.camelize
-                fileNameExp := (camelize fileNameExp)
+                exportName := (camelize exportName)
 
             if fileStats.isDirectory!
             and options.recursive
@@ -74,7 +73,7 @@ deepRequire = module.exports = (cwd, opts, str) -->
                     if options.recursive is 'flat'
                         mixin result, subDir
                     else
-                        result[fileNameExp] = subDir
+                        result[exportName] = subDir
 
             else if fileStats.isFile!
             and (options.extensions.indexOf fileExt.1) isnt -1
@@ -82,7 +81,10 @@ deepRequire = module.exports = (cwd, opts, str) -->
                     return
 
                 if typeof options.map is 'function'
-                    fileNameExp := (options.map fileNameExp, directory)
+                    exportName := (options.map exportName, directory)
 
-                result[fileNameExp] = require fileAbsPath
+                if typeof options.parse is 'function'
+                    result[exportName] = options.parse fileAbsPath
+                else
+                    result[exportName] = require fileAbsPath
         result

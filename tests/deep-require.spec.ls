@@ -141,3 +141,26 @@ suite 'options' !->
                         XYevenDeeper: 'even-deeper.js'
                     }
                 }
+
+    suite 'parse' !->
+        test 'parse files' !->
+            deepEqual do
+                deepRequire '../test-fixtures' { parse: -> require it }
+                {
+                    index: 'index.ls'
+                    otherFile: 'other-file.ls'
+                    someFile: 'some-file.js'
+                }
+
+        test 'parse files in sub-directories' !->
+            deepEqual do
+                deepRequire '../test-fixtures' { +recursive, parse: -> require it }
+                {
+                    index: 'index.ls'
+                    otherFile: 'other-file.ls'
+                    someFile: 'some-file.js'
+                    subDir: {
+                        deepFile: 'deep-file.ls'
+                        evenDeeper: 'even-deeper.js'
+                    }
+                }
