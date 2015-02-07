@@ -11,6 +11,7 @@ const DEFAULTS = {
     extensions: <[ js json ls coffee ]>
     recursive: false
     camelize: true
+    excludeDirs: /^\.(git|svn)$/
     filter: null
     map: null
     parse: null
@@ -43,7 +44,7 @@ module.exports = :deepRequire (cwd, opts, str) -->
     if (not /^[\.]{1,2}\//.test str) and (fs.existsSync NODE_PATH)
         cwd := NODE_PATH
 
-    # mix defaults with user-options
+    # mix user-options on top of defaults
     options = mixin {}, DEFAULTS, opts
 
     # parse input and return modules
@@ -59,14 +60,22 @@ module.exports = :deepRequire (cwd, opts, str) -->
             fileStats   = fs.statSync fileAbsPath
             exportName  = itemName.replace fileExt.0, ''
 
+            # parse export-name of files and directories
             if options.camelize
                 exportName := (camelize exportName)
 
+            # handle directories
             if fileStats.isDirectory!
             and options.recursive
+
+                # filter sub-directories
+                if filter options.excludeDirs, itemName
+                    return
+
+                # recursive call on sub-directory
                 subDir = walk filePath
 
-                # only add sub directory if it is not empty
+                # only add sub-directory if it is not empty
                 if Object.keys subDir .length > 0
 
                     # flatten results?
@@ -75,14 +84,19 @@ module.exports = :deepRequire (cwd, opts, str) -->
                     else
                         result[exportName] = subDir
 
+            # handle files
             else if fileStats.isFile!
             and (options.extensions.indexOf fileExt.1) isnt -1
+
+                # filter files
                 unless filter options.filter, itemName
                     return
 
+                # map files
                 if typeof options.map is 'function'
                     exportName := (options.map exportName, directory)
 
+                # parse files
                 if typeof options.parse is 'function'
                     result[exportName] = options.parse fileAbsPath
                 else

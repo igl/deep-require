@@ -95,6 +95,16 @@ suite 'options' !->
             result = deepRequire '../test-fixtures' { extensions: [ 'ls' ] }
             strictEqual 2, (Object.keys result .length)
 
+    suite 'excludeDirs' !->
+        test 'exclude directories' !->
+            deepEqual do
+                deepRequire '../test-fixtures' { excludeDirs: /^sub/ }
+                {
+                    index: 'index.ls'
+                    otherFile: 'other-file.ls'
+                    someFile: 'some-file.js'
+                }
+
     suite 'filter' !->
         test 'filter filenames' !->
             deepEqual do

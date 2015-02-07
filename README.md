@@ -21,10 +21,11 @@ Require all files within a directory.
 ## Options:
 
     deepRequire {
-        extensions : [ "js", "json", "ls", "coffee" ],
-        camelize   : true,
-        recursive  : false,         // Set to 'flat' for a flattened results.
-        filter     : /model\.js$/,  // Can also be a Function or String
-        map        : function (name, path) { return name[0].toUpperCase() + name.slice(1); },
-        parse      : function (resolvedPath) { return new require(resolvePath); }
+        extensions  : [ "js", "json", "ls", "coffee" ],
+        camelize    : true,
+        recursive   : false,             // Set to 'flat' for a flattened results.
+        excludeDirs : /^\.(git|svn)$/,   // Can also be a Function or String
+        filter      : /model\.js$/,      // Can also be a Function or String
+        map         : function (name, path) { return name[0].toUpperCase() + name.slice(1); },
+        parse       : function (resolvedPath) { return new require(resolvePath); }
     }
