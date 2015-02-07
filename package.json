@@ -1,6 +1,6 @@
 {
   "name": "deep-require",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "require directories with filter/map/parse and dash to camelCase conversion.",
   "license": "MIT",
   "author": "Richard Keil",
