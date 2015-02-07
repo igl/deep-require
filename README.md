@@ -1,12 +1,13 @@
-deep-require
-------------
+#deep-require
 
-Small require helper for node.js.
+Require all files within a directory.
 
-Works with transpiler runners which use `require-extensions`. (add your favorite one to options.extensions)
+- Works with transpiler runners which use `require-extensions`. (add your favorite to options.extensions)
+- Supports filter, map, parse and recursive with a flat option for sub directories.
+- `NODE_PATH` Support.
+- Partially applicable.
 
-
-Usage:
+## Usage:
 
     var getModels = require('deep-require')({
         camelize:true,
@@ -17,12 +18,13 @@ Usage:
     getModels('./models')
 
 
-Default Options:
+## Options:
 
-    {
-        extensions: <[ js json ls coffee ]>     - Array
-        recursive: false                        - Bool
-        camelize: true                          - Bool
-        filter: null                            - RegExp | Function
-        map: null                               - Function
+    deepRequire {
+        extensions : [ "js", "json", "ls", "coffee" ]
+        camelize   : true,
+        filter     : /model\.js$/,  // Can also be a Function or String
+        map        : function (name, path) { return name[0].toUpperCase() + name.slice(1); }
+        recursive  : false,         // Set to 'flat' for a flattened results.
+        parse      : function (resolvedPath) { return new require(resolvePath); }
     }
